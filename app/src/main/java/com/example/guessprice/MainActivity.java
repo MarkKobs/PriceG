@@ -22,8 +22,10 @@ public class MainActivity extends AppCompatActivity {
     private Button setprice;
     private EditText numinput;
     private TextView show;
+    private TextView remaintime;
     private Guess g;
     private int num;
+    private int time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
         setprice=(Button)findViewById(R.id.set);
         numinput = (EditText) findViewById(R.id.num);
         show = (TextView) findViewById(R.id.show);
-
+        remaintime = (TextView) findViewById(R.id.remaintime);
         g = new Guess();
         num = g.getRandomNum();
         guess.setOnClickListener(new MyListener());
         playagain.setOnClickListener(new MyListener());
         setprice.setOnClickListener(new MyListener());
-
+        setRemaintime();//封装函数，初始化remaintime
         numinput.setOnKeyListener(new View.OnKeyListener(){
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event){
@@ -52,6 +54,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    private void setRemaintime(){
+        if(num<=100){
+            time=7;//初始化为7次
+        }
+        else if(num>100&&num<=1000){
+            time=10;//初始化为10
+        }
+        else{
+            time=10;//暂时也设置为10，后期如果需要修改再说
+        }
+        //初始化剩余次数提示
+        String remain=String.valueOf(time);
+        remaintime.setText(Html.fromHtml("你还有"+"<font color='#FF0000'>"+remain+"</font>"+"次机会"));
     }
     private void showInputDialog() {
         /*@setView 装入一个EditView
@@ -72,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 }).show();
+        //设置价格，不会重新刷新剩余猜价格次数
     }
     class MyListener implements android.view.View.OnClickListener{
         @Override
@@ -88,12 +105,18 @@ public class MainActivity extends AppCompatActivity {
                     show.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
                 }
                 numinput.setText("");
+                //不管猜对还是没猜对，剩余猜的次数都应该-1
+                time-=1;
+                remaintime.setText(Html.fromHtml("你还有"+"<font color='#FF0000'>"+time+"</font>"+"次机会"));
+                if(time==0){//到了0次机会，那就不让继续猜了
+                    guess.setEnabled(false);
+                }
             }
             if(v.equals(playagain)){
-                show.setText("重新开始，这是一个随机产生的价格!");
+                show.setText("重新开始，剩余次数已刷新!");
                 numinput.setText("");
-                num=g.getRandomNum();
-
+                num=g.getRandomNum();//TODO 这里需要进行后续的修改，不是随机价格，而是商品固有的价格
+                setRemaintime();//setRemaintime again
                 setprice.setEnabled(true);
                 guess.setEnabled(true);
             }

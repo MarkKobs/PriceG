@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
         android:layout_marginLeft="140dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="204dp"
         android:autofillHints=""
         android:hint="@string/input_hint"
         android:inputType="number"
@@ -68,4 +68,15 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/num" />
+
+    <TextView
+        android:id="@+id/remaintime"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginLeft="152dp"
+        android:layout_marginBottom="16dp"
+        android:text="你还有10次机会"
+        app:layout_constraintBottom_toTopOf="@+id/num"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
