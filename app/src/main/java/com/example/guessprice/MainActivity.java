@@ -16,12 +16,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
     private Button guess;
     private Button playagain;
     private Button setprice;
     private EditText numinput;
     private TextView show;
+    private TextView show2;
+    private TextView middle;
     private TextView remaintime;
     private Guess g;
     private int num;
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setprice=(Button)findViewById(R.id.set);
         numinput = (EditText) findViewById(R.id.num);
         show = (TextView) findViewById(R.id.show);
+        show2 = (TextView) findViewById(R.id.show2);
+        middle = (TextView) findViewById(R.id.middle);
         remaintime = (TextView) findViewById(R.id.remaintime);
         g = new Guess();
         num = g.getRandomNum();
@@ -96,13 +102,18 @@ public class MainActivity extends AppCompatActivity {
             if(v.equals(guess)){
                 if(g.play(num,Integer.parseInt(numinput.getText().toString())).equals("猜对了!")){
                     String str=numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString()));
-                    show.append(Html.fromHtml("<br/><font color='#FF0000'>"+str+"</font>"));
+                    middle.setText(Html.fromHtml("<br/><font color='#FF0000'>"+str+"</font>"));
                     //猜对了就结束 只能先按重新开始
                     setprice.setEnabled(false);
                     guess.setEnabled(false);
                 }
                 else{
-                    show.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
+                    if(g.play(num,Integer.parseInt(numinput.getText().toString())).equals("猜小了")){
+                        show2.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
+                    }
+                    else{//猜大了
+                        show.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
+                    }
                 }
                 numinput.setText("");
                 //不管猜对还是没猜对，剩余猜的次数都应该-1
@@ -113,7 +124,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if(v.equals(playagain)){
-                show.setText("重新开始，剩余次数已刷新!");
+                show.setText("");
+                show2.setText("");
+                middle.setText("");
+                Toast.makeText(MainActivity.this,
+                        "重新开始，次数已刷新!",
+                        Toast.LENGTH_LONG).show();
                 numinput.setText("");
                 num=g.getRandomNum();//TODO 这里需要进行后续的修改，不是随机价格，而是商品固有的价格
                 setRemaintime();//setRemaintime again
