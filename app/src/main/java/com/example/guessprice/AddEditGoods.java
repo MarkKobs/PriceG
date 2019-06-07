@@ -43,7 +43,7 @@ public class AddEditGoods extends AppCompatActivity {
         imagePreview = (ImageView) findViewById(R.id.imageView);
         txtgoodsName = (EditText)findViewById(R.id.goodsName);
         txtgoodsPrice = (EditText) findViewById(R.id.goodsPrice);
-        saveToSDCard();
+        //saveToSDCard();
         btnPickImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
