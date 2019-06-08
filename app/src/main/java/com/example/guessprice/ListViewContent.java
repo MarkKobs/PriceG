@@ -57,10 +57,10 @@ public class ListViewContent extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
     public void onDelRow(View v) {
-        btnDel = (Button) findViewById(R.id.btnDelRow);
+        btnDel=(Button)v;
         int goodsID = Integer.parseInt(btnDel.getText().toString());
         dbhp.deleteRow(goodsID);
-        Log.d("goodsid",String.valueOf(goodsID));
+
         Toast.makeText(this , "Delete this row." , Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(ListViewContent.this , MainActivity.class);
         //startActivity(intent);
