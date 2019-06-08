@@ -58,9 +58,9 @@ public class ListViewContent extends AppCompatActivity {
     }
     public void onDelRow(View v) {
         btnDel = (Button) findViewById(R.id.btnDelRow);
-        int IDHeroList = Integer.parseInt(btnDel.getText().toString());
-        dbhp.deleteRow(IDHeroList);
-        Log.d("goodsid",String.valueOf(IDHeroList));
+        int goodsID = Integer.parseInt(btnDel.getText().toString());
+        dbhp.deleteRow(goodsID);
+        Log.d("goodsid",String.valueOf(goodsID));
         Toast.makeText(this , "Delete this row." , Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(ListViewContent.this , MainActivity.class);
         //startActivity(intent);
@@ -73,8 +73,8 @@ public class ListViewContent extends AppCompatActivity {
             int ID = data.getInt(0);
             int price = data.getInt(1) ;
             String name = data.getString(2);
-            byte[] HeroImage = data.getBlob(3);
-            listContent.add(new Goods(ID , price , name , HeroImage));
+            byte[] goodsImage = data.getBlob(3);
+            listContent.add(new Goods(ID , price , name , goodsImage));
 
         }
     }
@@ -143,8 +143,8 @@ public class ListViewContent extends AppCompatActivity {
             holder.txtGoodsName.setText(dc.getGoodsName());
             holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
             holder.delButton.setText(String.valueOf(dc.getGoodsID()));
-            byte[] heroImage = dc.getGoodsImage();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(heroImage , 0 , heroImage.length);
+            byte[] goodsImage = dc.getGoodsImage();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(goodsImage , 0 , goodsImage.length);
             holder.imageGoods.setImageBitmap(bitmap);
 
             return row;
