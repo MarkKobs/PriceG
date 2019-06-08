@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -56,15 +57,15 @@ public class ListViewContent extends AppCompatActivity {
         populateView();
         adapter.notifyDataSetChanged();
     }
-    public void onDelRow(View v) {
+    public void onCaiRow(View v) {
+        //删除功能改为->猜价格功能
+        //传递id
         btnDel=(Button)v;
-        int goodsID = Integer.parseInt(btnDel.getText().toString());
-        dbhp.deleteRow(goodsID);
+        int goodsID = (int)btnDel.getTag();
+        Toast.makeText(this , String.valueOf(goodsID) , Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(this , "Delete this row." , Toast.LENGTH_LONG).show();
-        //Intent intent = new Intent(ListViewContent.this , MainActivity.class);
-        //startActivity(intent);
-        flush();
+        //dbhp.deleteRow(goodsID);
+        //flush();
     }
 
     private void populateView() {
@@ -128,7 +129,7 @@ public class ListViewContent extends AppCompatActivity {
                 holder = new ViewHolder();
                 holder.txtGoodsName = (TextView) row.findViewById(R.id.goodsName);
                 holder.txtGoodsPrice = (TextView) row.findViewById(R.id.goodsPrice);
-                holder.delButton = (Button) row.findViewById(R.id.btnDelRow);
+                holder.delButton = (Button) row.findViewById(R.id.btnCaiRow);
                 holder.imageGoods = (ImageView) row.findViewById(R.id.goodsImage);
                 row.setTag(holder);
 
@@ -142,7 +143,7 @@ public class ListViewContent extends AppCompatActivity {
             final Goods dc = content.get(position);
             holder.txtGoodsName.setText(dc.getGoodsName());
             holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
-            holder.delButton.setText(String.valueOf(dc.getGoodsID()));
+            holder.delButton.setTag(dc.getGoodsID());//setText 改为 setTag，存在Tag中，注意是int格式
             byte[] goodsImage = dc.getGoodsImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(goodsImage , 0 , goodsImage.length);
             holder.imageGoods.setImageBitmap(bitmap);
