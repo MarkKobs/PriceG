@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class ListViewContent extends AppCompatActivity {
     ArrayList<Goods> listContent = new ArrayList<>();
     ListView listView;
     Button btnDel;
+    DragFloatActionButton fb;
     CustomAdapter adapter;
 
     @Override
@@ -34,38 +36,46 @@ public class ListViewContent extends AppCompatActivity {
         setContentView(R.layout.listview_layout);
 
         listView = (ListView) findViewById(R.id.dynamicListView);
+        fb=(DragFloatActionButton)findViewById(R.id.fb) ;
         dbhp = new DatabaseHelper(this);
 
         populateView();
         adapter= new CustomAdapter(this , R.layout.custom_listview_layout , listContent);
         listView.setAdapter(adapter);
 
-
+        fb.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent=new Intent(ListViewContent.this,AddEditGoods.class);
+                startActivity(intent);
+            }
+        });
     }
-
+    public void flush(){
+        listContent.clear();
+        populateView();
+        adapter.notifyDataSetChanged();
+    }
     public void onDelRow(View v) {
         btnDel = (Button) findViewById(R.id.btnDelRow);
         int IDHeroList = Integer.parseInt(btnDel.getText().toString());
+        Log.d("goodsid",String.valueOf(IDHeroList));
         dbhp.deleteRow(IDHeroList);
 
         Toast.makeText(this , "Delete this row." , Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(ListViewContent.this , MainActivity.class);
         //startActivity(intent);
-        listContent.clear();
-        populateView();
-        adapter.notifyDataSetChanged();
+        flush();
     }
 
     private void populateView() {
         Cursor data = dbhp.getContent();
         while(data.moveToNext()) {
-
             int ID = data.getInt(0);
             int price = data.getInt(1) ;
             String name = data.getString(2);
             byte[] HeroImage = data.getBlob(3);
             listContent.add(new Goods(ID , price , name , HeroImage));
-
 
         }
     }
@@ -131,8 +141,8 @@ public class ListViewContent extends AppCompatActivity {
             }
 
             final Goods dc = content.get(position);
-            holder.txtGoodsName.setText("Name: " + dc.getGoodsName());
-            holder.txtGoodsPrice.setText("Price: " + dc.getGoodsPrice());
+            holder.txtGoodsName.setText(dc.getGoodsName());
+            holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
             holder.delButton.setText(String.valueOf(dc.getGoodsID()));
             byte[] heroImage = dc.getGoodsImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(heroImage , 0 , heroImage.length);
@@ -140,5 +150,10 @@ public class ListViewContent extends AppCompatActivity {
 
             return row;
         }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        flush();
     }
 }

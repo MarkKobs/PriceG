@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 public class AddEditGoods extends AppCompatActivity {
     final int GALLERY_REQUEST_CODE = 1889;
@@ -110,6 +109,8 @@ public class AddEditGoods extends AppCompatActivity {
         }else{
             Toast.makeText(AddEditGoods.this,"插入失败",Toast.LENGTH_LONG).show();
         }
+        finish();//增加完了，这个activity的任务就结束了
+
     }
 
     public void saveToSDCard(){
