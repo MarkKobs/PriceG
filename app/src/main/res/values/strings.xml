@@ -3,5 +3,5 @@
     <string name="input_hint">猜测数字</string>
     <string name="restart">重新开始</string>
     <string name="start">猜价格</string>
-    <string name="setprice">设置价格</string>
+    <string name="setprice">重选商品</string>
 </resources>

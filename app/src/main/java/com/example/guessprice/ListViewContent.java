@@ -66,6 +66,9 @@ public class ListViewContent extends AppCompatActivity {
 
         //dbhp.deleteRow(goodsID);
         //flush();
+        Intent intent = new Intent(ListViewContent.this,MainActivity.class);
+        intent.putExtra("goodsID",goodsID);//把goodsID这个int值传送过去了
+        startActivity(intent);
     }
 
     private void populateView() {

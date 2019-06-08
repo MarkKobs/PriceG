@@ -5,9 +5,9 @@ import java.util.Random;
 public class Guess {
     private Random random;
     public Guess(){super();random=new Random();}
-    public int getRandomNum(){
-        return random.nextInt(100);
-    }
+//    public int getRandomNum(){
+//        return random.nextInt(100);
+//    }
     public int judge(int n,int num){
         if(n>num){
             return 1;

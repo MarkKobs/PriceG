@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "pricelist.db";
     private static final String TB_NAME = "pricelist_table";
+    private static final String COL1 = "goodsID";
     private static final String COL2 = "goodsPrice";
     private static final String COL3 = "goodsName";
     private static final String COL4 = "goodsImage";
@@ -51,5 +53,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TB_NAME + " WHERE goodsID = " + ID;
         db.execSQL(query);
+    }
+    public Goods getGoods(int goodsID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor=db.rawQuery("SELECT * FROM "+TB_NAME+" where goodsID="+goodsID,null);
+        if(cursor.moveToNext()){
+            int goodsPrice=cursor.getInt(cursor.getColumnIndex(COL2));
+            String goodsName=cursor.getString(cursor.getColumnIndex(COL3));
+            byte[] goodsImage=cursor.getBlob(cursor.getColumnIndex(COL4));
+            Goods goods=new Goods(goodsID,goodsPrice,goodsName,goodsImage);
+            return goods;
+        }
+        else return null;
     }
 }
