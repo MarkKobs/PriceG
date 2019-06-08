@@ -59,9 +59,8 @@ public class ListViewContent extends AppCompatActivity {
     public void onDelRow(View v) {
         btnDel = (Button) findViewById(R.id.btnDelRow);
         int IDHeroList = Integer.parseInt(btnDel.getText().toString());
-        Log.d("goodsid",String.valueOf(IDHeroList));
         dbhp.deleteRow(IDHeroList);
-
+        Log.d("goodsid",String.valueOf(IDHeroList));
         Toast.makeText(this , "Delete this row." , Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(ListViewContent.this , MainActivity.class);
         //startActivity(intent);
