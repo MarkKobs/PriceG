@@ -2,6 +2,8 @@ package com.example.guessprice;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private int time;
     private DatabaseHelper dbhp;
     private Goods goods;
+    private ImageView imageView;
+    private TextView goodsName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +52,25 @@ public class MainActivity extends AppCompatActivity {
         middle = (TextView) findViewById(R.id.middle);
         remaintime = (TextView) findViewById(R.id.remaintime);
         g = new Guess();
-
-        //num = g.getRandomNum();
+        goodsName=(TextView)findViewById(R.id.goodsName);
+        imageView=(ImageView)findViewById(R.id.goodsImage);
         Intent intent = getIntent();
         int goodsID=intent.getIntExtra("goodsID",100);
         Toast.makeText(MainActivity.this,String.valueOf(goodsID),Toast.LENGTH_SHORT).show();
+
         goods=dbhp.getGoods(goodsID);
+
+        //商品价格的设置
         num=goods.getGoodsPrice();
+
+        //商品名称的填充
+        goodsName.setText(goods.getGoodsName());
+
+        //商品图片的填充
+        byte[] imageByte = goods.getGoodsImage();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageByte , 0 , imageByte.length);
+        imageView.setImageBitmap(bitmap);
+
         guess.setOnClickListener(new MyListener());
         playagain.setOnClickListener(new MyListener());
         rechoice.setOnClickListener(new MyListener());
@@ -114,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     String str=numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString()));
                     middle.setText(Html.fromHtml("<br/><font color='#FF0000'>"+str+"</font>"));
                     //猜对了就结束 只能先按重新开始
-                    rechoice.setEnabled(false);
+                    //rechoice.setEnabled(false);
                     guess.setEnabled(false);
                 }
                 else{
@@ -144,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 //num=g.getRandomNum();
                 //TODO 这里需要进行后续的修改，不是随机价格，而是商品固有的价格
                 setRemaintime();//setRemaintime again
-                rechoice.setEnabled(true);
+                //rechoice.setEnabled(true);
                 guess.setEnabled(true);
             }
             if(v.equals(rechoice)){

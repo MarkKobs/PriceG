@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/goodsImage"
-        android:layout_width="111dp"
-        android:layout_height="83dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="145dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,42 +23,21 @@
         android:id="@+id/goodsName"
         android:layout_width="77dp"
         android:layout_height="24dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="60dp"
         android:text="商品名字"
-        app:layout_constraintBaseline_toBaselineOf="@+id/TextView"
-        app:layout_constraintStart_toEndOf="@+id/goodsImage" />
-
-    <TextView
-        android:id="@+id/goodsPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:text="商品价格"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnCaiRow"
-        app:layout_constraintStart_toEndOf="@+id/goodsImage" />
-
-    <TextView
-        android:id="@+id/TextView"
-        android:layout_width="39dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginTop="28dp"
-        android:text="DEL"
-        app:layout_constraintStart_toEndOf="@+id/goodsName"
+        app:layout_constraintStart_toEndOf="@+id/goodsImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCaiRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:onClick="onCaiRow"
         android:text="猜价格"
-        app:layout_constraintStart_toEndOf="@+id/goodsPrice"
-        app:layout_constraintTop_toBottomOf="@+id/TextView" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/goodsName"
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

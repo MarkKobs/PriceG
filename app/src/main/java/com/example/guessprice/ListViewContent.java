@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -114,7 +113,7 @@ public class ListViewContent extends AppCompatActivity {
 
         private class ViewHolder {
 
-            TextView txtGoodsName , txtGoodsPrice;
+            TextView txtGoodsName;
             ImageView imageGoods;
             Button delButton;
 
@@ -131,7 +130,7 @@ public class ListViewContent extends AppCompatActivity {
                 row = inflater.inflate(layout, null);
                 holder = new ViewHolder();
                 holder.txtGoodsName = (TextView) row.findViewById(R.id.goodsName);
-                holder.txtGoodsPrice = (TextView) row.findViewById(R.id.goodsPrice);
+                //holder.txtGoodsPrice = (TextView) row.findViewById(R.id.goodsPrice);
                 holder.delButton = (Button) row.findViewById(R.id.btnCaiRow);
                 holder.imageGoods = (ImageView) row.findViewById(R.id.goodsImage);
                 row.setTag(holder);
@@ -145,12 +144,11 @@ public class ListViewContent extends AppCompatActivity {
 
             final Goods dc = content.get(position);
             holder.txtGoodsName.setText(dc.getGoodsName());
-            holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
+            //holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
             holder.delButton.setTag(dc.getGoodsID());//setText 改为 setTag，存在Tag中，注意是int格式
             byte[] goodsImage = dc.getGoodsImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(goodsImage , 0 , goodsImage.length);
             holder.imageGoods.setImageBitmap(bitmap);
-
             return row;
         }
     }
