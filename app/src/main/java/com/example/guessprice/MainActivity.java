@@ -5,18 +5,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
     private Goods goods;
     private ImageView imageView;
     private TextView goodsName;
+    private View axis_back,axis_front;
+    private int axis_back_width,axis_back_height;
+    private int axis_front_width,Axis_front_height;
+    private int low,high;//low和high的默认值都为0
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
         show2 = (TextView) findViewById(R.id.show2);
         middle = (TextView) findViewById(R.id.middle);
         remaintime = (TextView) findViewById(R.id.remaintime);
+
+        axis_back=(View)findViewById(R.id.axis_back);
+        axis_front=(View)findViewById(R.id.axis_front);
+        ViewTreeObserver axis_back_observer=axis_back.getViewTreeObserver();
+        axis_back_observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                axis_back.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                //成功获得宽高
+                axis_back_height=axis_back.getHeight();
+                axis_back_width=axis_back.getWidth();
+            }
+        });
+
         g = new Guess();
         goodsName=(TextView)findViewById(R.id.goodsName);
         imageView=(ImageView)findViewById(R.id.goodsImage);
@@ -127,19 +150,42 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(v.equals(guess)){
-                if(g.play(num,Integer.parseInt(numinput.getText().toString())).equals("猜对了!")){
-                    String str=numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString()));
+                //猜数字按钮
+                int N=Integer.parseInt(numinput.getText().toString());
+                //对变量low和high 进行初始化，以及对后期进行更新
+                //如果low和high为0，默认为0，第一猜就会将它们进行初始化
+
+                if(N<num&&(low==0||N>low)){
+                    low=N;
+                }
+                if(N>num&&(high==0||N<high)){
+                    high=N;
+                }
+                if(low!=0&&high!=0){
+                    //画图
+                    ConstraintLayout.LayoutParams params=(ConstraintLayout.LayoutParams)axis_front.getLayoutParams();
+                    params.setMargins(200,0,params.rightMargin,params.bottomMargin);
+                    params.width=params.width-200;
+                    axis_front.setLayoutParams(params);
+                    Log.d("x",String.valueOf(axis_front.getX()));
+                    Log.d("y",String.valueOf(axis_front.getY()));
+                    Log.d("left",String.valueOf(axis_front.getLeft()));
+                    Log.d("right",String.valueOf(axis_front.getRight()));
+                    axis_front.setVisibility(View.VISIBLE);
+                }
+                if(g.play(num,N).equals("猜对了!")){
+                    String str=numinput.getText().toString()+g.play(num,N);
                     middle.setText(Html.fromHtml("<br/><font color='#FF0000'>"+str+"</font>"));
                     //猜对了就结束 只能先按重新开始
                     //rechoice.setEnabled(false);
                     guess.setEnabled(false);
                 }
                 else{
-                    if(g.play(num,Integer.parseInt(numinput.getText().toString())).equals("猜小了")){
-                        show2.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
+                    if(g.play(num,N).equals("猜小了")){
+                        show2.append("\n"+numinput.getText().toString()+g.play(num,N));
                     }
                     else{//猜大了
-                        show.append("\n"+numinput.getText().toString()+g.play(num,Integer.parseInt(numinput.getText().toString())));
+                        show.append("\n"+numinput.getText().toString()+g.play(num,N));
                     }
                 }
                 numinput.setText("");
