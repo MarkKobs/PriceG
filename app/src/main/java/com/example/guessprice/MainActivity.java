@@ -44,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private TextView goodsName;
     private View axis_back,axis_front;
-    private int axis_back_width,axis_back_height;
-    private int axis_front_width,Axis_front_height;
     private int low,high;//low和high的默认值都为0
+    private int scale;//来记录num的规模
+    private int ratio;//用来存储 ratio = (width)/(scale)
+    private TextView txtLow,txtHigh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,16 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
         axis_back=(View)findViewById(R.id.axis_back);
         axis_front=(View)findViewById(R.id.axis_front);
-        ViewTreeObserver axis_back_observer=axis_back.getViewTreeObserver();
-        axis_back_observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                axis_back.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                //成功获得宽高
-                axis_back_height=axis_back.getHeight();
-                axis_back_width=axis_back.getWidth();
-            }
-        });
+
+        txtLow=(TextView) findViewById(R.id.low);
+        txtHigh=(TextView)findViewById(R.id.high);
 
         g = new Guess();
         goodsName=(TextView)findViewById(R.id.goodsName);
@@ -85,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         //商品价格的设置
         num=goods.getGoodsPrice();
+        //设置规模
+        setScale();
 
         //商品名称的填充
         goodsName.setText(goods.getGoodsName());
@@ -111,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void setScale(){
+        if(num<100){
+            scale=100;
+        }
+        else{
+            scale=1000;
+        }
+    }
     private void setRemaintime(){
         if(num<=100){
             time=5;//初始化为5次
@@ -125,27 +129,6 @@ public class MainActivity extends AppCompatActivity {
         String remain=String.valueOf(time);
         remaintime.setText(Html.fromHtml("你还有"+"<font color='#FF0000'>"+remain+"</font>"+"次机会"));
     }
-//    private void showInputDialog() {
-//        /*@setView 装入一个EditView
-//         */
-//        final EditText editText = new EditText(MainActivity.this);
-//        //editText.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-//        editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//        AlertDialog.Builder inputDialog =
-//                new AlertDialog.Builder(MainActivity.this);
-//        inputDialog.setTitle(getString(R.string.setprice)).setView(editText);
-//        inputDialog.setPositiveButton("确定",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        num=Integer.parseInt(editText.getText().toString());
-//                        Toast.makeText(MainActivity.this,
-//                                "设置完成价格",
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                }).show();
-//        //设置价格，不会重新刷新剩余猜价格次数
-//    }
     class MyListener implements android.view.View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -163,15 +146,23 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(low!=0&&high!=0){
                     //画图
-                    ConstraintLayout.LayoutParams params=(ConstraintLayout.LayoutParams)axis_front.getLayoutParams();
-                    params.setMargins(200,0,params.rightMargin,params.bottomMargin);
-                    params.width=params.width-200;
+
+                    ViewGroup.LayoutParams params=axis_front.getLayoutParams();
+                    ratio=800/scale;
+                    //控制长度
+                    params.width=(high-low)*ratio;
+                    int translationX=(low+high-scale)/2*ratio;
+                    //右移 长度为：[(low+high)/2-scale/2]*radio ===> (low+high-scale)*ratio/2
+                    //左移 长度为：[scale/2-(low+high)/2]*radio ===> (scale-low-high)*ratio/2
+                    axis_front.setTranslationX(translationX);
                     axis_front.setLayoutParams(params);
-                    Log.d("x",String.valueOf(axis_front.getX()));
-                    Log.d("y",String.valueOf(axis_front.getY()));
-                    Log.d("left",String.valueOf(axis_front.getLeft()));
-                    Log.d("right",String.valueOf(axis_front.getRight()));
+                    txtLow.setText("区间左侧:"+low);
+                    txtHigh.setText("区间右侧:"+high);
+                    txtLow.setVisibility(View.VISIBLE);
+                    txtHigh.setVisibility(View.VISIBLE);
                     axis_front.setVisibility(View.VISIBLE);
+
+
                 }
                 if(g.play(num,N).equals("猜对了!")){
                     String str=numinput.getText().toString()+g.play(num,N);
@@ -204,11 +195,17 @@ public class MainActivity extends AppCompatActivity {
                         "重新开始，次数已刷新!",
                         Toast.LENGTH_LONG).show();
                 numinput.setText("");
-                //num=g.getRandomNum();
-                //TODO 这里需要进行后续的修改，不是随机价格，而是商品固有的价格
                 setRemaintime();//setRemaintime again
-                //rechoice.setEnabled(true);
                 guess.setEnabled(true);
+
+                ViewGroup.LayoutParams params=axis_front.getLayoutParams();
+                low=high=0;
+                params.width=800;
+                axis_front.setTranslationX(0);
+                axis_front.setLayoutParams(params);
+                axis_front.setVisibility(View.INVISIBLE);
+                txtHigh.setVisibility(View.INVISIBLE);
+                txtLow.setVisibility(View.INVISIBLE);
             }
             if(v.equals(rechoice)){
                 //这个Activity 猜价格的活动就结束->ListViewContent.onResume()
