@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,7 +43,6 @@ public class ListViewContent extends AppCompatActivity {
         populateView();
         adapter= new CustomAdapter(this , R.layout.custom_listview_layout , listContent);
         listView.setAdapter(adapter);
-
         fb.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -110,7 +110,9 @@ public class ListViewContent extends AppCompatActivity {
             return position;
         }
 
-
+        public void DelRow(int goodsID){
+            dbhp.deleteRow(goodsID);
+        }
         private class ViewHolder {
 
             TextView txtGoodsName;
@@ -134,21 +136,30 @@ public class ListViewContent extends AppCompatActivity {
                 holder.delButton = (Button) row.findViewById(R.id.btnCaiRow);
                 holder.imageGoods = (ImageView) row.findViewById(R.id.goodsImage);
                 row.setTag(holder);
-
-
             } else {
-
                 holder = (ViewHolder) row.getTag();
-
             }
-
             final Goods dc = content.get(position);
             holder.txtGoodsName.setText(dc.getGoodsName());
             //holder.txtGoodsPrice.setText(String.valueOf(dc.getGoodsPrice()));
             holder.delButton.setTag(dc.getGoodsID());//setText 改为 setTag，存在Tag中，注意是int格式
-            byte[] goodsImage = dc.getGoodsImage();
+            final byte[] goodsImage = dc.getGoodsImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(goodsImage , 0 , goodsImage.length);
             holder.imageGoods.setImageBitmap(bitmap);
+
+            row.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    //长按删除
+                    DelRow(dc.getGoodsID());
+                    //提示已经删除
+                    Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                    //刷新该页面
+                    flush();
+                    return true;
+                }
+            });
+
             return row;
         }
     }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private View axis_back,axis_front;
     private int low,high;//low和high的默认值都为0
     private int scale;//来记录num的规模
-    private int ratio;//用来存储 ratio = (width)/(scale)
+    private double ratio;//用来存储 ratio = (width)/(scale)
     private TextView txtLow,txtHigh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +111,15 @@ public class MainActivity extends AppCompatActivity {
         if(num<100){
             scale=100;
         }
-        else{
+        else if(num<1000){
             scale=1000;
+        }else{
+            scale=10000;
         }
     }
     private void setRemaintime(){
         if(num<=100){
-            time=5;//初始化为5次
+            time=7;//初始化为5次
         }
         else if(num>100&&num<=1000){
             time=10;//初始化为10
@@ -148,10 +150,12 @@ public class MainActivity extends AppCompatActivity {
                     //画图
 
                     ViewGroup.LayoutParams params=axis_front.getLayoutParams();
-                    ratio=800/scale;
+                    ratio=800.00/scale;
                     //控制长度
-                    params.width=(high-low)*ratio;
-                    int translationX=(low+high-scale)/2*ratio;
+                    params.width=(int)((high-low)*ratio);
+                    int translationX=(int)((low+high-scale)/2*ratio);
+                    Log.d("width","width:"+params.width);
+                    Log.d("translationX","translationX:"+translationX);
                     //右移 长度为：[(low+high)/2-scale/2]*radio ===> (low+high-scale)*ratio/2
                     //左移 长度为：[scale/2-(low+high)/2]*radio ===> (scale-low-high)*ratio/2
                     axis_front.setTranslationX(translationX);
