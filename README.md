@@ -1,5 +1,5 @@
-# PriceG
-This is a subject for teaching people to understand the binary search.
+# GuessPrice
+初高中教学用，猜价格，帮助学生了解二分法思想。
 
 ## 版本1.0
 ### 功能：
