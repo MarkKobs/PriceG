@@ -27,5 +27,10 @@ This is a subject for teaching people to understand the binary search.
 4. 智能化次数限制（根据二分策略）（算法：S=规模，x为次数，2^x-1<S，2^x>=S）
 5. 高低提示
 6.正确范围提示（绿色坐标轴显示）
+<img src="https://github.com/MarkKobs/markdownPhotos/blob/master/res/pic3.png" width = 30% height = 30% div align=center />
+<img src="https://github.com/MarkKobs/markdownPhotos/blob/master/res/pic4.png" width = 30% height = 30% div align=center />
+<img src="https://github.com/MarkKobs/markdownPhotos/blob/master/res/pic5.png" width = 30% height = 30% div align=center />
+<img src="https://github.com/MarkKobs/markdownPhotos/blob/master/res/pic6.png" width = 30% height = 30% div align=center />
+
 
 
